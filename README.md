@@ -1,7 +1,7 @@
 # WebScrapify
 Your go-to tool for swift and precise data extraction from any website. Automate your scraping tasks effortlessly and unlock valuable insights in seconds.
-[Uploading web_scraper.webm…]()
-[Uploading web_scraper.webm…]()
+
+[web_scraper.webm](https://github.com/Laban254/WebScrapify/assets/64686919/c7f280a1-af06-4d4b-af91-574032580da9)
 
 ## Description
 
