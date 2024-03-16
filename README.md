@@ -5,7 +5,7 @@ Your go-to tool for swift and precise data extraction from any website. Automate
 
 ## Description
 
-WebScrapify  is a Python-based web scraping tool designed to extract structured data from various websites quickly and efficiently. It provides a user-friendly interface for users to input a URL and retrieve essential information such as titles, headings, and paragraphs from the target webpage.
+WebScrapify is crafted with Django and Bootstrap 5, offering a Python-based web scraping tool designed for swift and efficient extraction of structured data from various websites. Its user-friendly interface empowers users to input a URL and seamlessly retrieve essential information such as titles, headings, and paragraphs from the target webpage
 
 ## Features
 
