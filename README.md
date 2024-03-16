@@ -5,7 +5,7 @@ Your go-to tool for swift and precise data extraction from any website. Automate
 
 ## Description
 
-Web Scraper is a Python-based web scraping tool designed to extract structured data from various websites quickly and efficiently. It provides a user-friendly interface for users to input a URL and retrieve essential information such as titles, headings, and paragraphs from the target webpage.
+WebScrapify  is a Python-based web scraping tool designed to extract structured data from various websites quickly and efficiently. It provides a user-friendly interface for users to input a URL and retrieve essential information such as titles, headings, and paragraphs from the target webpage.
 
 ## Features
 
