@@ -6,6 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 import json
+from urllib.parse import urlparse
 
 def home(request):
     """
@@ -13,12 +14,39 @@ def home(request):
     """
     return render(request, 'home.html')
 
+def is_valid_url(url):
+    """
+    Validate the URL format.
+    """
+    parsed_url = urlparse(url)
+    return all([parsed_url.scheme, parsed_url.netloc])
+
+def is_reachable_url(url):
+    """
+    Check if the URL is reachable.
+    """
+    try:
+        response = requests.head(url, timeout=5)
+        response.raise_for_status()
+        return True
+    except requests.RequestException:
+        return False
+
 def scrape(request):
     """
     Scrape data from a given URL.
     """
     if request.method == 'POST':
         url = request.POST.get('url')
+
+        # Validate URL format
+        if not is_valid_url(url):
+            return HttpResponse('Invalid URL format', status=400)
+
+        # Check if URL is reachable
+        if not is_reachable_url(url):
+            return HttpResponse('URL is not reachable', status=404)
+
         try:
             # Fetch the webpage
             response = requests.get(url)
@@ -28,7 +56,7 @@ def scrape(request):
             soup = BeautifulSoup(response.content, 'html.parser')
             
             # Extract relevant data
-            title = soup.title.string
+            title = soup.title.string if soup.title else 'No Title'
             headings = [heading.text.strip() for heading in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])]
             paragraphs = [paragraph.text.strip() for paragraph in soup.find_all('p')]
             
