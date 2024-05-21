@@ -1,12 +1,18 @@
-# Import necessary modules
 from django.shortcuts import render, HttpResponse
 from django.template.loader import get_template
-from xhtml2pdf import pisa
-import requests
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
+from xhtml2pdf import pisa
 import csv
 import json
 from urllib.parse import urlparse
+import requests
 
 def home(request):
     """
@@ -48,38 +54,53 @@ def scrape(request):
             return HttpResponse('URL is not reachable', status=404)
 
         try:
-            # Fetch the webpage
-            response = requests.get(url)
-            response.raise_for_status()
-            
-            # Parse HTML content
-            soup = BeautifulSoup(response.content, 'html.parser')
-            
+            # Set up Selenium WebDriver with WebDriver Manager
+            options = Options()
+            options.add_argument('--headless')  # Run Chrome in headless mode
+            options.add_argument('--no-sandbox')
+            options.add_argument('--disable-dev-shm-usage')
+
+            driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+            driver.get(url)
+
+            # Wait for the page to fully load
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.TAG_NAME, 'body'))
+            )
+
+            # Extract HTML content
+            html_content = driver.page_source
+            driver.quit()
+
+            # Parse HTML content with BeautifulSoup
+            soup = BeautifulSoup(html_content, 'html.parser')
+
             # Extract relevant data
             title = soup.title.string if soup.title else 'No Title'
             headings = [heading.text.strip() for heading in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])]
             paragraphs = [paragraph.text.strip() for paragraph in soup.find_all('p')]
-            
+
             # Prepare context for rendering result
             context = {
                 'title': title,
                 'headings': headings,
                 'paragraphs': paragraphs,
             }
-            
+
             # Store scraped data in session
             request.session['scraped_data'] = context
-            
+
             # Render result page
             return render(request, 'result.html', context)
-        
-        except (requests.RequestException, ValueError, AttributeError) as e:
+
+        except Exception as e:
             # Handle exceptions
             return HttpResponse(f'Error: {e}')
-    
+
     else:
         # Render home page for GET requests
         return render(request, 'home.html')
+
 
 
 def download_file(request):
