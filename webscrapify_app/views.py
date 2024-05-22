@@ -156,3 +156,45 @@ def download_file(request):
 
     except Exception as e:
         return HttpResponse(f'Error: {e}', status=500)
+    
+from datetime import datetime, timedelta
+import json
+from django.shortcuts import render, HttpResponse
+from django.utils.timezone import make_aware
+from django_celery_beat.models import PeriodicTask, ClockedSchedule
+
+def schedule_scraping(request):
+    if request.method == 'POST':
+        url = request.POST.get('url')
+        email = request.POST.get('email')
+        date_str = request.POST.get('date')
+        file_format = request.POST.get('format')
+
+        # Validate and parse the date
+        try:
+            scrape_date = datetime.strptime(date_str, '%Y-%m-%d')
+            scrape_date = make_aware(scrape_date)
+        except ValueError:
+            return HttpResponse('Invalid date format', status=400)
+
+        # Schedule the task
+        schedule_time = scrape_date - timedelta(hours=12)  # Adjust the timing as needed
+
+        # Create a ClockedSchedule
+        clocked_schedule, created = ClockedSchedule.objects.get_or_create(
+            clocked_time=schedule_time
+        )
+
+        # Create the PeriodicTask
+        task = PeriodicTask.objects.create(
+            clocked=clocked_schedule,
+            name=f'Scrape task for {email} at {schedule_time}',
+            task='your_project_name.tasks.scrape_and_send_email',
+            args=json.dumps([url, email, file_format]),
+            one_off=True
+        )
+
+        return HttpResponse('Scraping task scheduled successfully')
+    else:
+        return render(request, 'home.html')
+
