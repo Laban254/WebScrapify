@@ -1,4 +1,5 @@
 # myapp/tasks.py
+
 from celery import shared_task
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -15,6 +16,9 @@ import csv
 from xhtml2pdf import pisa
 from django.template.loader import render_to_string
 from django.core.files.storage import default_storage
+from django.core.mail import send_mail
+from django.conf import settings
+from datetime import datetime
 
 @shared_task
 def scrape_data(url, output_format):
@@ -75,7 +79,7 @@ def scrape_data(url, output_format):
                 return 'PDF generation failed'
 
         elif output_format == 'csv':
-            response = default_storage.open(file_name, 'w', newline='')
+            response = default_storage.open(file_name, 'w')
             writer = csv.writer(response)
             writer.writerow(['Title', 'Headings', 'Paragraphs'])
             writer.writerow([context['title'], '\n'.join(context['headings']), '\n'.join(context['paragraphs'])])
@@ -86,8 +90,15 @@ def scrape_data(url, output_format):
             json.dump(context, response, indent=4)
             response.close()
 
+        # Send email notification on successful completion
+        subject = f'Scraping Task Completed for {url}'
+        message = f'The scraping task for {url} in {output_format} format has been completed successfully at {datetime.now()}'
+        from_email = settings.DEFAULT_FROM_EMAIL
+        recipient_list = ['labanrotich6545@gmail.com']  # Replace with your recipient's email address
+
+        send_mail(subject, message, from_email, recipient_list)
+
         return f"File saved as {file_name}"
 
     except Exception as e:
         return str(e)
-
