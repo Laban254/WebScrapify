@@ -73,10 +73,13 @@ def scrape_data(url, output_format):
         if output_format == 'pdf':
             html = render_to_string('result.html', context)
             response = default_storage.open(file_name, 'w+b')
-            pisa_status = pisa.CreatePDF(html, dest=response, encoding='utf-8')
-            response.close()
-            if pisa_status.err:
-                return 'PDF generation failed'
+            try:
+                pisa_status = pisa.CreatePDF(html, dest=response, encoding='utf-8')
+                response.close()
+                if pisa_status.err:
+                    return 'PDF generation failed'
+            except Exception as pdf_error:
+                return f'Error generating PDF: {str(pdf_error)}'
 
         elif output_format == 'csv':
             response = default_storage.open(file_name, 'w')
