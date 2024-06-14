@@ -157,44 +157,70 @@ def download_file(request):
     except Exception as e:
         return HttpResponse(f'Error: {e}', status=500)
     
-from datetime import datetime, timedelta
-import json
-from django.shortcuts import render, HttpResponse
-from django.utils.timezone import make_aware
-from django_celery_beat.models import PeriodicTask, ClockedSchedule
 
-def schedule_scraping(request):
+from django.shortcuts import render, redirect
+from django.utils.dateparse import parse_datetime
+from django.contrib import messages
+from .forms import ScheduleForm
+from .tasks import scrape_data  # Import your Celery task function
+
+from datetime import datetime, timezone
+
+def schedule_scrape(request):
     if request.method == 'POST':
-        url = request.POST.get('url')
-        email = request.POST.get('email')
-        date_str = request.POST.get('date')
-        file_format = request.POST.get('format')
-
-        # Validate and parse the date
-        try:
-            scrape_date = datetime.strptime(date_str, '%Y-%m-%d')
-            scrape_date = make_aware(scrape_date)
-        except ValueError:
-            return HttpResponse('Invalid date format', status=400)
-
-        # Schedule the task
-        schedule_time = scrape_date - timedelta(hours=12)  # Adjust the timing as needed
-
-        # Create a ClockedSchedule
-        clocked_schedule, created = ClockedSchedule.objects.get_or_create(
-            clocked_time=schedule_time
-        )
-
-        # Create the PeriodicTask
-        task = PeriodicTask.objects.create(
-            clocked=clocked_schedule,
-            name=f'Scrape task for {email} at {schedule_time}',
-            task='your_project_name.tasks.scrape_and_send_email',
-            args=json.dumps([url, email, file_format]),
-            one_off=True
-        )
-
-        return HttpResponse('Scraping task scheduled successfully')
+        form = ScheduleForm(request.POST)
+        if form.is_valid():
+            url = form.cleaned_data['url']
+            schedule_date = form.cleaned_data['schedule_date']
+            schedule_time = form.cleaned_data['schedule_time']
+            output_format = form.cleaned_data['output_format']
+            
+            # Combine date and time into a single datetime object
+            schedule_datetime = datetime.combine(schedule_date, schedule_time).astimezone(timezone.utc)
+            
+            # Format schedule_datetime in ISO 8601 format
+            schedule_time_iso = schedule_datetime.isoformat()
+            
+            # Schedule the scraping task
+            result = scrape_data.apply_async((url, output_format), eta=schedule_time_iso)
+            
+            # Add success message
+            messages.success(request, f'Scraping scheduled at {schedule_datetime}. Task ID: {result.id}')
+            
+            return redirect('webscrapify_app:schedule_scrape')  # Redirect to home or another appropriate page after scheduling
     else:
-        return render(request, 'home.html')
+        form = ScheduleForm()
+    
+    return render(request, 'schedule.html', {'form': form})
 
+
+from django.shortcuts import render
+from django.contrib import messages
+from celery import current_app
+from datetime import datetime
+
+def scheduled_tasks(request):
+    # Retrieve scheduled tasks from Celery
+    scheduled_tasks = current_app.control.inspect().scheduled()
+
+    tasks_info = []
+    if scheduled_tasks:
+        for worker, tasks in scheduled_tasks.items():
+            for task in tasks:
+                task_info = {
+                    'id': task['request']['id'],
+                    'url': task['request']['args'][0],  # Assuming URL is the first argument
+                    'schedule_time': datetime.fromisoformat(task['eta']).strftime('%Y-%m-%d %H:%M:%S'),
+                    'status': 'Scheduled'  # Initial status assumption
+                }
+                tasks_info.append(task_info)
+
+        messages.info(request, f"Found {len(tasks_info)} scheduled tasks.")
+    else:
+        messages.info(request, "No scheduled tasks found.")
+
+    context = {
+        'tasks_info': tasks_info,
+    }
+
+    return render(request, 'scheduled_tasks.html', context)

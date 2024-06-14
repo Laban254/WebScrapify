@@ -1,0 +1,61 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Section: Design Block -->
+<section class="">
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+  <!-- Jumbotron -->
+  <div class="px-4 py-5 px-md-5 text-center text-lg-start" style="background-color: hsl(0, 0%, 96%)">
+    <div class="container">
+      <div class="row gx-lg-5 align-items-center">
+        <div class="col-lg-6 mb-5 mb-sm-0">
+          <h2 class="my- display-3 fw-bold ls-tight">
+            Welcome! Let's Get Started.<br />
+            <span class="text-primary">Schedule Your Scrape </span>
+          </h2>
+        </div>
+
+        <div class="col-lg-6 mb-3 mb-lg-0">
+          <div class="card">
+            <div class="card-body py-5 px-md-5">
+              <h2 class="fw-bold mb-4">scrape data</h2>
+
+              <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.url.label_tag }}
+                    {{ form.url }}
+                </div>
+                <div class="mb-3">
+                    {{ form.schedule_date.label_tag }}
+                    {{ form.schedule_date }}
+                </div>
+                <div class="mb-3">
+                    {{ form.schedule_time.label_tag }}
+                    {{ form.schedule_time }}
+                </div>
+                <div class="mb-3">
+                    {{ form.output_format.label_tag }}
+                    {{ form.output_format }}
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Schedule Scrape</button>
+                </div>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Jumbotron -->
+</section>
+<!-- Section: Design Block -->
+{% endblock %}
