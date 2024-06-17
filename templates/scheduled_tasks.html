@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-3 mb-5" style="max-height: 500px; overflow-y: auto;">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Scheduled Scrape</h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">URL</th>
+                            <th scope="col">Scheduled Time (UTC)</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if tasks_info %}
+                            {% for task in tasks_info %}
+                                <tr>
+                                    <td>{{ task.id }}</td>
+                                    <td><a href="{{ task.url }}" target="_blank">{{ task.url }}</a></td>
+                                    <td>{{ task.schedule_time }}</td>
+                                    <td>
+                                        <span class="badge {{ task.status|lower }}">{{ task.status }}</span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">No scheduled Scrape found.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+        <div class="container" style="height: 80%;">
+            <div class="row  align-items-center h-80">
+                <div class="col-lg-6 mb-5 mb-sm-0">
+                    <h2 class="my- display-3 fw-bold ls-tight">
+                        Welcome! Let's Get Started.<br />
+                        <span class="text-primary">Schedule Your Scrape</span>
+                    </h2>
+                </div>
+
+                <div class="col-lg-6 mb-3 mb-lg-0">
+                    <div class="card h-100">
+                        <div class="card-body py-5 px-md-5">
+                            <h2 class="fw-bold mb-4">Scrape Data</h2>
+
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    {{ form.url.label_tag }}
+                                    {{ form.url }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form.schedule_date.label_tag }}
+                                    {{ form.schedule_date }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form.schedule_time.label_tag }}
+                                    {{ form.schedule_time }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form.output_format.label_tag }}
+                                    {{ form.output_format }}
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary">Schedule Scrape</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+ 
+{% endblock %}
