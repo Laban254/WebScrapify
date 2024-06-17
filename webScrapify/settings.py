@@ -31,6 +31,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+ACCOUNT_SIGNUP_REDIRECT_URL = 'webscrapify_app:home'
 
 # Application definition
 
@@ -44,6 +47,13 @@ INSTALLED_APPS = [
     'webscrapify_app',
     'django_celery_results',
     'django_celery_beat',
+    'widget_tweaks',
+    # oath
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -54,14 +64,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'webScrapify.urls'
-
+BASE_DIRs = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIRs, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -86,6 +97,8 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
 
 
 # Password validation
@@ -129,6 +142,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 # celery
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
@@ -147,3 +161,75 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False  # SSL is not supported for Gmail SMTP
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') 
+
+
+
+# Oath
+# Google OAuth Settings
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_EMAIL_VERIFICATION = "none"
+LOGIN_REDIRECT_URL = '/'
+
+
+
+AUTHENTICATION_BACKENDS = (
+    'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '1043176860772-5iabn6v6sq7rih4ngv4kq6gn5g751d5v.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+# # Oath
+# AUTHENTICATION_BACKENDS = [
+#     'django.contrib.auth.backends.ModelBackend',
+#     'allauth.account.auth_backends.AuthenticationBackend',
+# ]
+
+# SITE_ID = 1  # If not defined already
+
+# # Google OAuth Settings
+# SOCIALACCOUNT_PROVIDERS = {
+#     'google': {
+#         'SCOPE': [
+#             'profile',
+#             'email',
+#         ],
+#         'AUTH_PARAMS': {
+#             'access_type': 'online',
+#         },
+#         'APP': {
+#             'client_id': '1043176860772-5iabn6v6sq7rih4ngv4kq6gn5g751d5v.apps.googleusercontent.com',
+#             'secret': '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',
+#             'key': ''
+#         }
+#     }
+# }
+
+# LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+# LOGIN_URL = 'custom_login'
+# GOOGLE_OAUTH_CLIENT_ID = '1043176860772-5iabn6v6sq7rih4ngv4kq6gn5g751d5v.apps.googleusercontent.com'
+# GOOGLE_OAUTH_CLIENT_SECRET = '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'
+# GOOGLE_REDIRECT_URI = 'http://localhost:8000/accounts/google/callback/'
+
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'

@@ -1,0 +1,77 @@
+
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load socialaccount %}
+{% load i18n %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px;">
+      <div class="card-body">
+          <div class="text-center mb-4">
+              <p>Already have an account? Then please <a class="text-primary" href="{% url 'account_login' %}">sign in</a>.</p>
+          </div>
+          <h1 class="text-center bg-light py-2 rounded mb-4 font-weight-bold">Create Your Account</h1>
+          <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+              {% csrf_token %}
+              {% if form.non_field_errors %}
+              <div class="alert alert-danger">
+                  {{ form.non_field_errors }}
+              </div>
+              {% endif %}
+              <div class="mb-3">
+                  {{ form.username|add_class:"form-control" }}
+                  {% if form.username.errors %}
+                  <div class="text-danger">
+                      {{ form.username.errors }}
+                  </div>
+                  {% endif %}
+              </div>
+              <div class="mb-3">
+                  {{ form.email|add_class:"form-control" }}
+                  {% if form.email.errors %}
+                  <div class="text-danger">
+                      {{ form.email.errors }}
+                  </div>
+                  {% endif %}
+              </div>
+              <div class="mb-3">
+                  {{ form.password1|add_class:"form-control" }}
+                  {% if form.password1.errors %}
+                  <div class="text-danger">
+                      {{ form.password1.errors }}
+                  </div>
+                  {% endif %}
+              </div>
+              <div class="mb-3">
+                  {{ form.password2|add_class:"form-control" }}
+                  {% if form.password2.errors %}
+                  <div class="text-danger">
+                      {{ form.password2.errors }}
+                  </div>
+                  {% endif %}
+              </div>
+              {% if redirect_field_value %}
+              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+              {% endif %}
+              <button type="submit" class="btn btn-primary w-100 py-2 mb-3">
+                  {% trans "Sign Up" %}
+              </button>
+          </form>
+          <div class="text-center mb-3">or</div>
+          <a href="{% provider_login_url 'google' %}" class="btn btn-danger w-100 py-2">
+              Continue with Google <i class="fab fa-google ms-2"></i>
+          </a>
+      </div>
+  </div>
+</div>
+{% endblock %}
+
+<style>
+  .form-control {
+    height: 40px;
+    border-radius: 6px;
+    padding: 0 12px;
+    font-size: medium;
+  }
+</style>

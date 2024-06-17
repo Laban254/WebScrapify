@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load socialaccount %}
+{% load widget_tweaks %}
+{% block content %}
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg p-4" style="width: 100%; max-width: 400px;">
+        <div class="card-body">
+            <h1 class="card-title text-center mb-4">Welcome Back</h1>
+            <p class="text-center mb-4">If you haven't created an account yet, please <a class="text-primary" href="{{ signup_url }}">sign up</a> first.</p>
+            <form action="{% url 'account_login' %}" method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.login|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    {{ form.password|add_class:"form-control" }}
+                </div>
+                <div class="form-check mb-3">
+                    {{ form.remember|add_class:"form-check-input" }}
+                    <label for="remember" class="form-check-label">Remember Me</label>
+                </div>
+                <button class="btn btn-primary w-100 mb-3" type="submit">Sign In</button>
+            </form>
+            <div class="text-center my-3">
+                <a href="{% url 'account_reset_password' %}" class="text-blue-600">Forgot Password?</a>
+            </div>
+            <div class="text-center">or</div>
+            <a href="{% provider_login_url 'google' %}" class="btn btn-danger w-100 mt-3">
+                Sign in with Google <i class="fab fa-google ms-2"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
