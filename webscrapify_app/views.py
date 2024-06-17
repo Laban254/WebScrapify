@@ -13,6 +13,11 @@ import csv
 import json
 from urllib.parse import urlparse
 import requests
+# from django.urls import reverse
+
+# def google_login_redirect(request):
+#     google_login_url = reverse('socialaccount_login', args=['google'])
+#     return redirect(google_login_url)
 
 def home(request):
     """
@@ -156,3 +161,71 @@ def download_file(request):
 
     except Exception as e:
         return HttpResponse(f'Error: {e}', status=500)
+    
+
+from django.shortcuts import render, redirect
+from django.utils.dateparse import parse_datetime
+from django.contrib import messages
+from .forms import ScheduleForm
+from .tasks import scrape_data  # Import your Celery task function
+
+from datetime import datetime, timezone
+
+def schedule_scrape(request):
+    if request.method == 'POST':
+        form = ScheduleForm(request.POST)
+        if form.is_valid():
+            url = form.cleaned_data['url']
+            schedule_date = form.cleaned_data['schedule_date']
+            schedule_time = form.cleaned_data['schedule_time']
+            output_format = form.cleaned_data['output_format']
+            
+            # Combine date and time into a single datetime object
+            schedule_datetime = datetime.combine(schedule_date, schedule_time).astimezone(timezone.utc)
+            
+            # Format schedule_datetime in ISO 8601 format
+            schedule_time_iso = schedule_datetime.isoformat()
+            
+            # Schedule the scraping task
+            result = scrape_data.apply_async((url, output_format), eta=schedule_time_iso)
+            
+            # Add success message
+            messages.success(request, f'Scraping scheduled at {schedule_datetime}. Task ID: {result.id}')
+            
+            return redirect('webscrapify_app:schedule_scrape')  # Redirect to home or another appropriate page after scheduling
+    else:
+        form = ScheduleForm()
+    
+    return render(request, 'schedule.html', {'form': form})
+
+
+from django.shortcuts import render
+from django.contrib import messages
+from celery import current_app
+from datetime import datetime
+
+def scheduled_tasks(request):
+    # Retrieve scheduled tasks from Celery
+    scheduled_tasks = current_app.control.inspect().scheduled()
+
+    tasks_info = []
+    if scheduled_tasks:
+        for worker, tasks in scheduled_tasks.items():
+            for task in tasks:
+                task_info = {
+                    'id': task['request']['id'],
+                    'url': task['request']['args'][0],  # Assuming URL is the first argument
+                    'schedule_time': datetime.fromisoformat(task['eta']).strftime('%Y-%m-%d %H:%M:%S'),
+                    'status': 'Scheduled'  # Initial status assumption
+                }
+                tasks_info.append(task_info)
+
+        messages.info(request, f"Found {len(tasks_info)} scheduled tasks.")
+    else:
+        messages.info(request, "No scheduled tasks found.")
+
+    context = {
+        'tasks_info': tasks_info,
+    }
+
+    return render(request, 'scheduled_tasks.html', context)
