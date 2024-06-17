@@ -13,6 +13,11 @@ import csv
 import json
 from urllib.parse import urlparse
 import requests
+# from django.urls import reverse
+
+# def google_login_redirect(request):
+#     google_login_url = reverse('socialaccount_login', args=['google'])
+#     return redirect(google_login_url)
 
 def home(request):
     """
