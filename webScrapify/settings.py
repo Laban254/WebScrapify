@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
-ACCOUNT_SIGNUP_REDIRECT_URL = 'webscrapify_app:home'
+
 
 # Application definition
 
@@ -135,8 +135,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
-
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -171,8 +173,8 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 # ACCOUNT_EMAIL_VERIFICATION = 'optional'
 ACCOUNT_EMAIL_VERIFICATION = "none"
-LOGIN_REDIRECT_URL = '/'
-
+LOGIN_REDIRECT_URL = 'webscrapify_app:home'
+ACCOUNT_SIGNUP_REDIRECT_URL = 'webscrapify_app:home'
 
 
 AUTHENTICATION_BACKENDS = (
@@ -196,40 +198,5 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
-# # Oath
-# AUTHENTICATION_BACKENDS = [
-#     'django.contrib.auth.backends.ModelBackend',
-#     'allauth.account.auth_backends.AuthenticationBackend',
-# ]
 
-# SITE_ID = 1  # If not defined already
-
-# # Google OAuth Settings
-# SOCIALACCOUNT_PROVIDERS = {
-#     'google': {
-#         'SCOPE': [
-#             'profile',
-#             'email',
-#         ],
-#         'AUTH_PARAMS': {
-#             'access_type': 'online',
-#         },
-#         'APP': {
-#             'client_id': '1043176860772-5iabn6v6sq7rih4ngv4kq6gn5g751d5v.apps.googleusercontent.com',
-#             'secret': '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',
-#             'key': ''
-#         }
-#     }
-# }
-
-# LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-
-# LOGIN_URL = 'custom_login'
-# GOOGLE_OAUTH_CLIENT_ID = '1043176860772-5iabn6v6sq7rih4ngv4kq6gn5g751d5v.apps.googleusercontent.com'
-# GOOGLE_OAUTH_CLIENT_SECRET = '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'
-# GOOGLE_REDIRECT_URI = 'http://localhost:8000/accounts/google/callback/'
-
-# ACCOUNT_AUTHENTICATION_METHOD = 'email'
-# ACCOUNT_EMAIL_REQUIRED = True
-# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
