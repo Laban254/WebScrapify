@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* Full Page Hero */
+   .hero-section {
+        height: 95vh; /* Ensures the hero takes up the exact viewport height */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: white; /* Ensures text is visible against the background */
+    }
+    
+    /* Button Hover Effects */
+   .btn:hover {
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="hero-section text-center py-3 bg-cover" style="background-image: url('{% static 'images/scrape2.jpg' %}'); color: white;">
+    <div class="container mt-5">
+        <div class="row justify-content-center mt-5">
+            <div class="col-12 col-md-8 text-center mt-5">
+                <h1 class="display-5 fw-bold animate__animated animate__fadeInDown" style="color: #007bff;">Welcome to Our Web Scraping Service</h1>
+<p class="fs-5 animate__animated animate__fadeInUp" style="color: #0056b3;">Experience seamless data extraction with our web scraping service. Access real-time data instantly upon visiting our site, enabling immediate insights and decision-making. Furthermore, leverage our scheduling feature to automate data collection at your preferred intervals, ensuring continuous access to up-to-date information tailored to your needs.</p>
+
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <a href="{% url 'account_signup' %}" class="btn btn-outline-primary btn-lg px-4 animate__animated animate__pulse">Get Started</a>
+                    <a href="#" class="btn btn-primary btn-lg px-4 animate__animated animate__pulse">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+    © 2024 Copyright:
+    <a class="text-body" href="#">webscrapify.com</a>
+    | <a href="https://github.com/laban254" target="_blank"><i class="fab fa-github"></i></a>
+    | <a href="https://twitter.com/labanK_e" target="_blank"><i class="fab fa-twitter"></i></a>
+</div>
+
+{% endblock %}
+
+
+
