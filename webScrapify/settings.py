@@ -24,12 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(mwa327nsujq@9in$q#4lp7g%0wlm1uj#^+2$wp!u!ejoe1-@@'
+DEBUG = os.getenv('DEBUG', '0') == '1'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '*').split(',')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
@@ -48,6 +46,7 @@ INSTALLED_APPS = [
     'django_celery_results',
     'django_celery_beat',
     'widget_tweaks',
+    "whitenoise.runserver_nostatic"
     # oath
     'allauth',
     'allauth.account',
@@ -65,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = 'webScrapify.urls'
@@ -138,7 +138,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
-]
+] 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
