@@ -25,6 +25,12 @@ def home(request):
     """
     return render(request, 'home.html')
 
+def index(request):
+    """
+    Render the home page.
+    """
+    return render(request, 'index.html')
+
 def is_valid_url(url):
     """
     Validate the URL format.
