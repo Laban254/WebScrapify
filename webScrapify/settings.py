@@ -109,16 +109,13 @@ WSGI_APPLICATION = 'webScrapify.wsgi.application'
 #         'PORT': 5432,
 #     }
 # }
-import dj_database_url
 
 # Parse database configuration from $DATABASE_URL
-db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
-
 DATABASES = {
-    'default': db_from_env
+    'default': dj_database_url.config(
+        default=f'postgres://{os.getenv("POSTGRES_USER")}:{os.getenv("POSTGRES_PASSWORD")}@localhost:5432/{os.getenv("POSTGRES_DB")}'
+    )
 }
-
-
 
 
 # Password validation

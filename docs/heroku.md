@@ -1,7 +1,7 @@
 heroku login
 heroku create <your-app-name>
 heroku stack:set container --app <your-app-name>
-git push heroku <branch name>
+git push heroku main
 heroku ps:scale web=1 --app <your-app-name>
 
 
