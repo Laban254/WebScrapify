@@ -28,7 +28,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = os.getenv('DEBUG')
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '*').split(',')
+
+
+allowed_hosts = os.getenv('DJANGO_ALLOWED_HOSTS', '*')
+ALLOWED_HOSTS = allowed_hosts.split(',')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
