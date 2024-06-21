@@ -36,7 +36,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
-      CELERY_BROKER_URL: redis://redis:6379/0
+      # CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: ${REDIS_URL}
 
   celery:
     build:
@@ -57,7 +58,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
-      CELERY_BROKER_URL: redis://redis:6379/0
+      # CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: ${REDIS_URL}
 
   flower:
     build:
@@ -78,7 +80,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
-      CELERY_BROKER_URL: redis://redis:6379/0
+      # CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: ${REDIS_URL}
 
 volumes:
   postgres_data:
