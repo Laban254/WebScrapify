@@ -24,3 +24,10 @@ heroku config:set DEBUG=True \
 
 heroku run python manage.py migrate --app webscrapifyy
 heroku open --app webscrapifyy
+
+
+<!-- check for postgrss addons -->
+heroku addons:plans heroku-postgresql 
+
+ heroku addons:create heroku-postgresql:essential-0 --app webscrapifyy
+heroku addons --app webscrapifyy

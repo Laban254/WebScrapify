@@ -110,11 +110,9 @@ WSGI_APPLICATION = 'webScrapify.wsgi.application'
 #     }
 # }
 
-# Parse database configuration from $DATABASE_URL
+# Update DATABASES to use the DATABASE_URL from environment variable
 DATABASES = {
-    'default': dj_database_url.config(
-        default=f'postgres://{os.getenv("POSTGRES_USER")}:{os.getenv("POSTGRES_PASSWORD")}@localhost:5432/{os.getenv("POSTGRES_DB")}'
-    )
+    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
 }
 
 
