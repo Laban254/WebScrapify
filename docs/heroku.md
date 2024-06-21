@@ -20,4 +20,7 @@ heroku run python manage.py createsuperuser --app webscrapifyy
 
 heroku run python manage.py collectstatic --noinput --app webscrapifyy
 
+
+heroku restart --app webscrapifyy
+
 heroku logs --tail --app webscrapifyy
