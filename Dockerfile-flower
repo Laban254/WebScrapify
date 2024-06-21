@@ -1,0 +1,18 @@
+# Dockerfile-flower
+FROM python:3.10
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the requirements file
+COPY requirements.txt .
+
+# Install dependencies including Flower
+RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install flower
+
+# Copy the project
+COPY . .
+
+# Default command
+CMD ["celery", "-A", "webScrapify", "flower", "--port=5555"]

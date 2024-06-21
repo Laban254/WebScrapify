@@ -12,6 +12,7 @@ certifi==2024.6.2
 cffi==1.16.0
 chardet==5.2.0
 charset-normalizer==3.3.2
+chromedriver-binary==128.0.6544.0.0
 click==8.1.7
 click-didyoumean==0.3.1
 click-plugins==1.1.1
@@ -43,6 +44,8 @@ packaging==24.1
 pillow==10.3.0
 prometheus_client==0.20.0
 prompt_toolkit==3.0.47
+psycopg2==2.9.9
+psycopg2-binary==2.9.9
 pyasn1==0.6.0
 pyasn1_modules==0.4.0
 pycparser==2.22
@@ -84,6 +87,6 @@ vine==5.1.0
 wcwidth==0.2.13
 webdriver-manager==4.0.1
 webencodings==0.5.1
-whitenoise==6.6.0
+whitenoise==6.7.0
 wsproto==1.2.0
 xhtml2pdf==0.2.16

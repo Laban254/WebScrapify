@@ -16,9 +16,9 @@ db.sqlite3
 
 # Dependency directories
 /env/
-/.venv/
+/envscrape/
 /.env/
-envwebscrapify
+envscrape
 
 # IDE specific files
 .vscode/
