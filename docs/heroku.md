@@ -24,3 +24,6 @@ heroku run python manage.py collectstatic --noinput --app webscrapifyy
 heroku restart --app webscrapifyy
 heroku run python manage.py collectstaticic
 heroku logs --tail --app webscrapifyy
+
+heroku ps:scale worker=1 --app webscrapifyy
+

@@ -8,3 +8,4 @@ build:
 
 run:
   web: gunicorn webScrapify.wsgi --log-file -
+  celery: celery -A webScrapify worker --loglevel=info
