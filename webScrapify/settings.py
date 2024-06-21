@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django_celery_results',
     'django_celery_beat',
     'widget_tweaks',
+    'corsheaders',
     # "whitenoise.runserver_nostatic"
     # oath
     'allauth',
@@ -220,3 +221,8 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 LOGOUT_REDIRECT_URL = '/'
+
+
+CORS_ALLOWED_ORIGINS = [
+    "https://webscrapifyy-1c0f0424e97d.herokuapp.com",
+]
