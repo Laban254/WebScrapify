@@ -229,3 +229,7 @@ LOGOUT_REDIRECT_URL = '/'
 CORS_ALLOWED_ORIGINS = [
     "https://webscrapifyy-1c0f0424e97d.herokuapp.com",
 ]
+
+CSRF_TRUSTED_ORIGINS = ['https://webscrapifyy-1c0f0424e97d.herokuapp.com']
+
+CORS_ALLOW_ALL_HEADERS = True
