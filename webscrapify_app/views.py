@@ -55,6 +55,7 @@ def scrape(request):
     """
     if request.method == 'POST':
         url = request.POST.get('url')
+        print(f"URL received from POST request: {url}")
 
         # Validate URL format
         if not is_valid_url(url):
@@ -106,14 +107,12 @@ def scrape(request):
 
         except Exception as e:
             # Handle exceptions
-            return HttpResponse(f'Error: {e}')
+            return HttpResponse(f'Error: {e}', status=500)
 
     else:
         # Render home page for GET requests
         return render(request, 'home.html')
-
-
-
+    
 def download_file(request):
     """
     Download scraped data in the requested format.
