@@ -172,7 +172,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # celery
 # Get MemCachier Redis URL from environment variables
 redis_url = os.environ.get('MEMCACHIER_SERVERS', 'redis://localhost:6379')
-s
+
 CELERY_BROKER_URL = f'{redis_url}/0'
 CELERY_RESULT_BACKEND = f'{redis_url}/0'
 
