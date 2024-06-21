@@ -3,3 +3,8 @@ build:
     web: Dockerfile
     celery: Dockerfile-celery
     flower: Dockerfile-flower
+  config:
+    PYTHON_RUNTIME_VERSION: python-3.10
+
+run:
+  web: gunicorn webScrapify.wsgi --log-file -
