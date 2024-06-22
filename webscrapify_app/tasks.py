@@ -19,7 +19,7 @@ from django.core.files.storage import default_storage
 from django.core.mail import send_mail
 from django.conf import settings
 from datetime import datetime
-from .models import Notification, User  # Ensure you have Notification and User models
+from .models import Notification, User
 
 @shared_task
 def scrape_data(url, output_format, user_id):
