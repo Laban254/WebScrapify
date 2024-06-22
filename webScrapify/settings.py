@@ -30,13 +30,15 @@ DEBUG = os.getenv('DEBUG')
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 
-allowed_hosts = os.getenv('DJANGO_ALLOWED_HOSTS', '*')
-ALLOWED_HOSTS = allowed_hosts.split(',')
+# allowed_hosts = os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1')
+# ALLOWED_HOSTS = allowed_hosts.split(',')
+ALLOWED_HOSTS = ["*"]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 CSRF_COOKIE_SECURE = True 
 
+SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
 
 # Application definition
 
@@ -97,12 +99,12 @@ WSGI_APPLICATION = 'webScrapify.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+     'default': {
+         'ENGINE': 'django.db.backends.sqlite3',
+         'NAME': BASE_DIR / 'db.sqlite3',
+     }
+ }
 
 # DATABASES = {
 #     'default': {
@@ -116,13 +118,13 @@ WSGI_APPLICATION = 'webScrapify.wsgi.application'
 # }
 
 # Update DATABASES to use the DATABASE_URL from environment variable
-import dj_database_url
+# import dj_database_url
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL')
-    )
-}
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default=os.getenv('DATABASE_URL')
+#     )
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -170,25 +172,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # celery
-# Get MemCachier Redis URL from environment variables
-# redis_url = os.environ.get('MEMCACHIER_SERVERS', 'redis://localhost:6379')
-
-# CELERY_BROKER_URL = f'{redis_url}/0'
-# CELERY_RESULT_BACKEND = f'{redis_url}/0'
 
 # CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://redis:6379/0')
 # CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
-# use django backend# Celery configuration
-# CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'memcached://127.0.0.1:11211/')
-# CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', 'memcached://127.0.0.1:11211/')
+
 
 
 # use redis addons
 # Get the Redis URL from the environment variable
-REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
+# REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
 
-CELERY_BROKER_URL = REDIS_URL
-CELERY_RESULT_BACKEND = REDIS_URL
+# CELERY_BROKER_URL = REDIS_URL
+# CELERY_RESULT_BACKEND = REDIS_URL
 
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
@@ -245,9 +240,9 @@ LOGOUT_REDIRECT_URL = '/'
 
 
 CORS_ALLOWED_ORIGINS = [
-    "https://webscrapifyy-1c0f0424e97d.herokuapp.com",
+    "https://webscrapifyy-1c0f0424e97d.herokuapp.com", "http://127.0.0.1",
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://webscrapifyy-1c0f0424e97d.herokuapp.com']
+CSRF_TRUSTED_ORIGINS = ['https://webscrapifyy-1c0f0424e97d.herokuapp.com', "http://127.0.0.1"]
 
 CORS_ALLOW_ALL_HEADERS = True
