@@ -13,6 +13,7 @@ import csv
 import json
 from urllib.parse import urlparse
 import requests
+from django.contrib.auth.decorators import login_required
 # from django.urls import reverse
 
 # def google_login_redirect(request):
@@ -49,6 +50,7 @@ def is_reachable_url(url):
     except requests.RequestException:
         return False
 
+@login_required
 def scrape(request):
     """
     Scrape data from a given URL.
@@ -112,7 +114,8 @@ def scrape(request):
     else:
         # Render home page for GET requests
         return render(request, 'home.html')
-    
+
+@login_required   
 def download_file(request):
     """
     Download scraped data in the requested format.
@@ -176,6 +179,7 @@ from .tasks import scrape_data  # Import your Celery task function
 
 from datetime import datetime, timezone
 
+@login_required
 def schedule_scrape(request):
     if request.method == 'POST':
         form = ScheduleForm(request.POST)
@@ -209,8 +213,11 @@ from django.contrib import messages
 from celery import current_app
 from datetime import datetime
 
+
+@login_required
 def scheduled_tasks(request):
     # Retrieve scheduled tasks from Celery
+    print("user is", request.user)
     scheduled_tasks = current_app.control.inspect().scheduled()
 
     tasks_info = []
