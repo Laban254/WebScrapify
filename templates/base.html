@@ -85,6 +85,16 @@
         .btn-scrape:hover {
             background-color: #2185d0;
         }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+        }
+        .notification-bell .badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
     </style>
 </head>
 <body>
@@ -122,6 +132,22 @@
                             <li><a class="dropdown-item" href="{% url 'account_logout' %}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
                         </ul>
                     </li>
+                    <a class="nav-link notification-bell" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge bg-danger">{{ unread_notifications_count }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        {% if notifications %}
+                            {% for notification in notifications %}
+                                <li class="dropdown-item">
+                                    {{ notification.message }}
+                                    <span class="text-muted small">{{ notification.created_at }}</span>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="dropdown-item text-center">No notifications</li>
+                        {% endif %}
+                    </ul>
 
                     {% else %}
                     <li class="nav-item">

@@ -192,11 +192,8 @@ def schedule_scrape(request):
             # Combine date and time into a single datetime object
             schedule_datetime = datetime.combine(schedule_date, schedule_time).astimezone(timezone.utc)
             
-            # Format schedule_datetime in ISO 8601 format
-            schedule_time_iso = schedule_datetime.isoformat()
-            
-            # Schedule the scraping task
-            result = scrape_data.apply_async((url, output_format), eta=schedule_time_iso)
+            # Schedule the scraping task with the user ID
+            result = scrape_data.apply_async((url, output_format, request.user.id), eta=schedule_datetime)
             
             # Add success message
             messages.success(request, f'Scraping scheduled at {schedule_datetime}. Task ID: {result.id}')
@@ -207,12 +204,12 @@ def schedule_scrape(request):
     
     return render(request, 'schedule.html', {'form': form})
 
-
 from django.shortcuts import render
 from django.contrib import messages
 from celery import current_app
 from datetime import datetime
 
+from .models import Notification
 
 @login_required
 def scheduled_tasks(request):
@@ -236,8 +233,14 @@ def scheduled_tasks(request):
     else:
         messages.info(request, "No scheduled tasks found.")
 
+    # Retrieve notifications for the logged-in user
+    notifications = Notification.objects.filter(user=request.user, is_read=False)
+    unread_notifications_count = notifications.count()
+
     context = {
         'tasks_info': tasks_info,
+        'notifications': notifications,
+        'unread_notifications_count': unread_notifications_count,
     }
 
     return render(request, 'scheduled_tasks.html', context)

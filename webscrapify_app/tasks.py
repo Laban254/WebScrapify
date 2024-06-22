@@ -19,9 +19,10 @@ from django.core.files.storage import default_storage
 from django.core.mail import send_mail
 from django.conf import settings
 from datetime import datetime
+from .models import Notification, User  # Ensure you have Notification and User models
 
 @shared_task
-def scrape_data(url, output_format):
+def scrape_data(url, output_format, user_id):
     def is_valid_url(url):
         parsed_url = urlparse(url)
         return all([parsed_url.scheme, parsed_url.netloc])
@@ -97,11 +98,21 @@ def scrape_data(url, output_format):
         subject = f'Scraping Task Completed for {url}'
         message = f'The scraping task for {url} in {output_format} format has been completed successfully at {datetime.now()}'
         from_email = settings.DEFAULT_FROM_EMAIL
-        recipient_list = ['labanrotich6545@gmail.com']  # Replace with your recipient's email address
+        recipient_list = [User.objects.get(id=user_id).email]
 
         send_mail(subject, message, from_email, recipient_list)
+
+        # Create a notification for the user
+        Notification.objects.create(
+            user_id=user_id,
+            message=f'Scraping task for {url} completed successfully.'
+        )
 
         return f"File saved as {file_name}"
 
     except Exception as e:
+        Notification.objects.create(
+            user_id=user_id,
+            message=f'Scraping task for {url} failed with error: {str(e)}'
+        )
         return str(e)
