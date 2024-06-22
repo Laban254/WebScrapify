@@ -198,11 +198,12 @@ def schedule_scrape(request):
             # Add success message
             messages.success(request, f'Scraping scheduled at {schedule_datetime}. Task ID: {result.id}')
             
-            return redirect('webscrapify_app:schedule_scrape')  # Redirect to home or another appropriate page after scheduling
+            return redirect('webscrapify_app:schedule_scrape') 
     else:
         form = ScheduleForm()
     
     return render(request, 'schedule.html', {'form': form})
+
 
 from django.shortcuts import render
 from django.contrib import messages
@@ -214,27 +215,25 @@ from .models import Notification
 @login_required
 def scheduled_tasks(request):
     # Retrieve scheduled tasks from Celery
-    print("user is", request.user)
     scheduled_tasks = current_app.control.inspect().scheduled()
 
     tasks_info = []
     if scheduled_tasks:
         for worker, tasks in scheduled_tasks.items():
             for task in tasks:
-                task_info = {
-                    'id': task['request']['id'],
-                    'url': task['request']['args'][0],  # Assuming URL is the first argument
-                    'schedule_time': datetime.fromisoformat(task['eta']).strftime('%Y-%m-%d %H:%M:%S'),
-                    'status': 'Scheduled'  # Initial status assumption
-                }
-                tasks_info.append(task_info)
-
-        messages.info(request, f"Found {len(tasks_info)} scheduled tasks.")
-    else:
-        messages.info(request, "No scheduled tasks found.")
+                # Ensure the task has arguments and that there are at least 3 arguments
+                if 'args' in task['request'] and len(task['request']['args']) > 2:
+                    if task['request']['args'][2] == request.user.id:  # Assuming user ID is the third argument
+                        task_info = {
+                            'id': task['request']['id'],
+                            'url': task['request']['args'][0],  # Assuming URL is the first argument
+                            'schedule_time': datetime.fromisoformat(task['eta']).strftime('%Y-%m-%d %H:%M:%S'),
+                            'status': 'Scheduled'  # Initial status assumption
+                        }
+                        tasks_info.append(task_info)
 
     # Retrieve notifications for the logged-in user
-    notifications = Notification.objects.filter(user=request.user, is_read=False)
+    notifications = Notification.objects.filter(user_id=request.user.id, is_read=False)
     unread_notifications_count = notifications.count()
 
     context = {
@@ -244,3 +243,4 @@ def scheduled_tasks(request):
     }
 
     return render(request, 'scheduled_tasks.html', context)
+
