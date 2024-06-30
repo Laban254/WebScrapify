@@ -1,0 +1,18 @@
+
+    /* Full Page Hero */
+   .hero-section {
+        height: 95vh; /* Ensures the hero takes up the exact viewport height */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: white; /* Ensures text is visible against the background */
+    }
+    
+    /* Button Hover Effects */
+   .btn:hover {
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+    }
