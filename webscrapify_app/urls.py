@@ -12,4 +12,5 @@ urlpatterns = [
             path('scheduled-tasks/', views.scheduled_tasks, name='scheduled_tasks'),
             
         ]
-        
+
+handler404 = 'views.custom_404'
