@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,91 +12,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-image: url('static/pexels-photo-2259232.jpeg');
-            background-size: cover;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        .navbar-custom {
-            background-color: #0077b5;
-        }
-        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
-            color: white;
-        }
-        .navbar-custom .nav-link:hover, .navbar-custom .nav-link.active {
-            color: #ffcc00;
-            background-color: transparent;
-        }
-        .dropdown-menu-dark {
-            background-color: #333;
-        }
-        .dropdown-menu-dark .dropdown-item {
-            color: white;
-        }
-        .dropdown-menu-dark .dropdown-item:hover {
-            background-color: #555;
-        }
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .card {
-            background-color: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            padding: 100px;
-            max-width: 900px;
-            width: 100%;
-            transition: transform 0.3s ease-in-out;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        .card-title {
-            font-size: 28px;
-            font-weight: bold;
-            color: #0077b5;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .form-control {
-            border: 1px solid #ced4da;
-            border-radius: 25px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        .btn-scrape {
-            background-color: #0077b5;
-            border: none;
-            border-radius: 25px;
-            padding: 15px;
-            color: white;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-            width: 100%;
-        }
-        .btn-scrape:hover {
-            background-color: #2185d0;
-        }
-
-        .notification-bell {
-            position: relative;
-            cursor: pointer;
-        }
-        .notification-bell .badge {
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+   
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-custom">
