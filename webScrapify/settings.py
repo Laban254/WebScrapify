@@ -99,12 +99,12 @@ WSGI_APPLICATION = 'webScrapify.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.sqlite3',
-         'NAME': BASE_DIR / 'db.sqlite3',
-     }
- }
+# DATABASES = {
+#      'default': {
+#          'ENGINE': 'django.db.backends.sqlite3',
+#          'NAME': BASE_DIR / 'db.sqlite3',
+#      }
+#  }
 
 # DATABASES = {
 #     'default': {
@@ -118,13 +118,13 @@ DATABASES = {
 # }
 
 # Update DATABASES to use the DATABASE_URL from environment variable
-# import dj_database_url
+import dj_database_url
 
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         default=os.getenv('DATABASE_URL')
-#     )
-# }
+DATABASES = {
+     'default': dj_database_url.config(
+         default=os.getenv('DATABASE_URL')
+     )
+ }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -184,10 +184,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # use redis addons
 # Get the Redis URL from the environment variable
-# REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
+REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
 
-# CELERY_BROKER_URL = REDIS_URL
-# CELERY_RESULT_BACKEND = REDIS_URL
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_URL
 
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
