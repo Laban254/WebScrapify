@@ -27,3 +27,6 @@ heroku logs --tail --app webscrapifyy
 
 heroku ps:scale worker=1 --app webscrapifyy
 
+<!-- celery -->
+celery -A webScrapify flower --port=5555
+celery -A webScrapify worker --loglevel=info

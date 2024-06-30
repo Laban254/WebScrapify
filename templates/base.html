@@ -85,6 +85,16 @@
         .btn-scrape:hover {
             background-color: #2185d0;
         }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+        }
+        .notification-bell .badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
     </style>
 </head>
 <body>
@@ -122,6 +132,22 @@
                             <li><a class="dropdown-item" href="{% url 'account_logout' %}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
                         </ul>
                     </li>
+                    <a class="nav-link notification-bell" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge bg-danger">{{ unread_notifications_count }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        {% if notifications %}
+                            {% for notification in notifications %}
+                                <li class="dropdown-item">
+                                    {{ notification.message }}
+                                    <span class="text-muted small">{{ notification.created_at }}</span>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="dropdown-item text-center">No notifications</li>
+                        {% endif %}
+                    </ul>
 
                     {% else %}
                     <li class="nav-item">
@@ -139,7 +165,44 @@
             </div>
         </div>
     </nav>
+    
     {% block content %}{% endblock %}
+
+    {% if messages %}
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            {% for message in messages %}
+            <div id="toast-{{ forloop.counter }}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    {% if message.tags == 'error' %}
+                    <strong class="me-auto text-danger">Error</strong>
+                    {% else %}
+                    <strong class="me-auto text-{{ message.tags|default:"info" }}">Message</strong>
+                    {% endif %}
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    {{ message }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const toastElList = [].slice.call(document.querySelectorAll('.toast'))
+            const toastList = toastElList.map(function (toastEl) {
+                return new bootstrap.Toast(toastEl, { delay: 5000 });
+            });
+            toastList.forEach(toast => toast.show());
+        });
+    </script>
+    {% endif %}
+    
+
+
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var path = window.location.pathname.split("/").filter(x => x);
@@ -151,6 +214,7 @@
             });
         });
     </script>
+    
 </body>
 </html>
 

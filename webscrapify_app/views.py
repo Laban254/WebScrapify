@@ -13,6 +13,7 @@ import csv
 import json
 from urllib.parse import urlparse
 import requests
+from django.contrib.auth.decorators import login_required
 # from django.urls import reverse
 
 # def google_login_redirect(request):
@@ -49,6 +50,7 @@ def is_reachable_url(url):
     except requests.RequestException:
         return False
 
+@login_required
 def scrape(request):
     """
     Scrape data from a given URL.
@@ -112,7 +114,8 @@ def scrape(request):
     else:
         # Render home page for GET requests
         return render(request, 'home.html')
-    
+
+@login_required   
 def download_file(request):
     """
     Download scraped data in the requested format.
@@ -176,6 +179,7 @@ from .tasks import scrape_data  # Import your Celery task function
 
 from datetime import datetime, timezone
 
+@login_required
 def schedule_scrape(request):
     if request.method == 'POST':
         form = ScheduleForm(request.POST)
@@ -188,16 +192,13 @@ def schedule_scrape(request):
             # Combine date and time into a single datetime object
             schedule_datetime = datetime.combine(schedule_date, schedule_time).astimezone(timezone.utc)
             
-            # Format schedule_datetime in ISO 8601 format
-            schedule_time_iso = schedule_datetime.isoformat()
-            
-            # Schedule the scraping task
-            result = scrape_data.apply_async((url, output_format), eta=schedule_time_iso)
+            # Schedule the scraping task with the user ID
+            result = scrape_data.apply_async((url, output_format, request.user.id), eta=schedule_datetime)
             
             # Add success message
             messages.success(request, f'Scraping scheduled at {schedule_datetime}. Task ID: {result.id}')
             
-            return redirect('webscrapify_app:schedule_scrape')  # Redirect to home or another appropriate page after scheduling
+            return redirect('webscrapify_app:schedule_scrape') 
     else:
         form = ScheduleForm()
     
@@ -209,6 +210,9 @@ from django.contrib import messages
 from celery import current_app
 from datetime import datetime
 
+from .models import Notification
+
+@login_required
 def scheduled_tasks(request):
     # Retrieve scheduled tasks from Celery
     scheduled_tasks = current_app.control.inspect().scheduled()
@@ -217,20 +221,26 @@ def scheduled_tasks(request):
     if scheduled_tasks:
         for worker, tasks in scheduled_tasks.items():
             for task in tasks:
-                task_info = {
-                    'id': task['request']['id'],
-                    'url': task['request']['args'][0],  # Assuming URL is the first argument
-                    'schedule_time': datetime.fromisoformat(task['eta']).strftime('%Y-%m-%d %H:%M:%S'),
-                    'status': 'Scheduled'  # Initial status assumption
-                }
-                tasks_info.append(task_info)
+                # Ensure the task has arguments and that there are at least 3 arguments
+                if 'args' in task['request'] and len(task['request']['args']) > 2:
+                    if task['request']['args'][2] == request.user.id:  # Assuming user ID is the third argument
+                        task_info = {
+                            'id': task['request']['id'],
+                            'url': task['request']['args'][0],  # Assuming URL is the first argument
+                            'schedule_time': datetime.fromisoformat(task['eta']).strftime('%Y-%m-%d %H:%M:%S'),
+                            'status': 'Scheduled'  # Initial status assumption
+                        }
+                        tasks_info.append(task_info)
 
-        messages.info(request, f"Found {len(tasks_info)} scheduled tasks.")
-    else:
-        messages.info(request, "No scheduled tasks found.")
+    # Retrieve notifications for the logged-in user
+    notifications = Notification.objects.filter(user_id=request.user.id, is_read=False)
+    unread_notifications_count = notifications.count()
 
     context = {
         'tasks_info': tasks_info,
+        'notifications': notifications,
+        'unread_notifications_count': unread_notifications_count,
     }
 
     return render(request, 'scheduled_tasks.html', context)
+
