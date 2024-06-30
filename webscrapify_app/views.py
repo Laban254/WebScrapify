@@ -20,6 +20,9 @@ from django.contrib.auth.decorators import login_required
 #     google_login_url = reverse('socialaccount_login', args=['google'])
 #     return redirect(google_login_url)
 
+def custom_404(request, exception):
+    return render(request, 'custom_errors/404.html', {}, status=404)
+
 def home(request):
     """
     Render the home page.
