@@ -13,4 +13,4 @@ urlpatterns = [
             
         ]
 
-handler404 = 'views.custom_404'
+handler404 = 'webscrapify_app.views.custom_404'
