@@ -34,24 +34,20 @@ RUN CHROME_DRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_R
 # Set display port to avoid crash
 ENV DISPLAY=:99
 
-
 # Copy the requirements file
 COPY requirements.txt .
 
 # Install dependencies
-RUN pip install --no-cache-dir  -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the project
 COPY . .
 
-# Copy entrypoint script
-# COPY entrypoint.sh /entrypoint.sh
+# Collect static files
+RUN python3 manage.py collectstatic --noinput
 
 # Expose the port
 EXPOSE 8000
-
-# Entrypoint
-# ENTRYPOINT ["/entrypoint.sh"]
 
 # Default command
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
