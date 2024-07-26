@@ -108,7 +108,7 @@ Encountering issues? Here are some tips:
 
 ## Get in touch
 
-If you spot a mistake, or something that could be improved (of which there are probably many), then do let me know:
+If you spot a mistake, or something that could be improved, then do let me know:
 
 Laban Kibet 
 https://labankibet.tech  
