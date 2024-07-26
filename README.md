@@ -27,14 +27,16 @@ Before you begin, make sure you have the following installed on your machine:
 
 Before starting, configure the environment variables by creating a `.env` file in the project's root directory. Add the following variables:
 
-`DJANGO_SECRET_KEY=your_secret_key_here
-DEBUG=True
-DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
-POSTGRES_DB=mydatabase
-POSTGRES_USER=myuser
-POSTGRES_PASSWORD=mypassword
-EMAIL_HOST_USER=email@example.com
-EMAIL_HOST_PASSWORD=your_email_password` 
+	DJANGO_SECRET_KEY=your_secret_key_here
+   	DEBUG=True
+   	DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
+    	POSTGRES_DB=mydatabase
+   	POSTGRES_USER=myuser
+   	POSTGRES_PASSWORD=mypassword
+  	EMAIL_HOST_USER=email@example.com
+   	EMAIL_HOST_PASSWORD=your_email_password
+   	
+
 
 Replace placeholders (`your_secret_key_here`, `mydatabase`, `myuser`, `mypassword`, `email@example.com`, `your_email_password`) with your actual values.
 
